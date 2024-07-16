@@ -19,7 +19,7 @@ O DrinkHub é um aplicativo dedicado a entusiastas de coquetéis, oferecendo uma
 - Banco de Dados: Railway
 
 
-### Rotas da API
+### Principais Rotas da API
 
 1. **GET https://teste-git-main-leondodes-projects.vercel.app/drinks**
    - Retorna a lista de todos os drinks disponíveis.
