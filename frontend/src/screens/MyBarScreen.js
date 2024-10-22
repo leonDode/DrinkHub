@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContex } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity ,LogBox} from 'react-native';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -155,6 +155,7 @@ export default function MyBarScreen() {
       )}
 
       {/* footer menu */}
+      {/* 
       <View className="flex-row justify-around items-center p-4 bg-white border-t border-gray-200">
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <HomeIcon size={hp(3)} color="gray" />
@@ -166,6 +167,7 @@ export default function MyBarScreen() {
           <BookmarkIcon size={hp(3)} color="gray" />
         </TouchableOpacity>
       </View>
+      */}
     </View>
   );
 

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, TextInput, Modal, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { HomeIcon, HomeIconOutline, IdentificationIcon, BookmarkIcon, SparklesIcon, Cog8ToothIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
@@ -11,6 +11,8 @@ import axios from 'axios';
 import Recipes from '../components/recipes';
 import { URL } from '../helpers/url';
 import CheckBox from 'react-native-check-box';
+import { AuthContext } from '../contexts/authContext';
+
 
 export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState();
@@ -20,6 +22,15 @@ export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const { userToken, login, logout, isLoading } = useContext(AuthContext);
+
+
+
+
+
+
+
+
 
   const navigation = useNavigation();
 
@@ -42,7 +53,7 @@ export default function HomeScreen() {
   // listagem de categorias
   const getCategories = async () => {
     try {
-      const response = await axios.get(URL + '/categorias');
+      const response = await axios.get(`${URL}/categorias`);
       if (response && response.data) {
         setCategories(response.data);
       }
@@ -136,7 +147,7 @@ export default function HomeScreen() {
             source={require('../../assets/images/avatar.png')}
             style={{ height: hp(5), width: hp(5.5) }}
           />
-          <TouchableOpacity onPress={toggleModal}>
+          <TouchableOpacity onPress={logout}>
             <Cog8ToothIcon size={hp(3)} color="gray" />
           </TouchableOpacity>
         </View>
@@ -193,6 +204,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
       {/* footer menu */}
+      {/*
       <View className="flex-row justify-around items-center p-4 bg-white border-t border-gray-200">
         <TouchableOpacity onPress={() => handleIconPress('Home')}>
           {activeIcon === 'Home' ? (
@@ -210,6 +222,7 @@ export default function HomeScreen() {
           <BookmarkIcon size={hp(3)} color="gray" />
         </TouchableOpacity>
       </View>
+      */}
 
       {/* Modal */}
       <Modal

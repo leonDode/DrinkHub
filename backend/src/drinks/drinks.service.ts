@@ -7,10 +7,11 @@ import { Ingrediente } from './entities/ingredientes.entity';
 import { CreateDrinkDTO } from './dto/create_drink.dto';
 import { UpdateDrinkDTO } from './dto/update_drink.dto';
 import { UpdateIngredienteDTO } from './dto/update_ingrediente_dto';
+import { Usuario } from './entities/usuario.entity';
 
 @Injectable()
 export class DrinksService {
-
+  
     constructor(
         @InjectRepository(Drink)
         private readonly drinkRepository: Repository<Drink>,
@@ -19,7 +20,10 @@ export class DrinksService {
         private readonly tagRepository: Repository<Tag>,
 
         @InjectRepository(Ingrediente)
-        private readonly ingredienteRepository: Repository<Ingrediente>
+        private readonly ingredienteRepository: Repository<Ingrediente>,
+        
+        @InjectRepository(Usuario)
+        private readonly usuarioRepository: Repository<Usuario>
     ){}
 
    
@@ -168,14 +172,23 @@ export class DrinksService {
       const ingredientes = await Promise.all(
         createDrinkDTO.ingredientes.map(nome=> this.preloadIngredienteByName(nome)),
       )
+
+      let usuario = null;
+      if (createDrinkDTO.usuarioId) {
+       usuario = await this.usuarioRepository.findOne({ where: { id: createDrinkDTO.usuarioId } });
+      if (!usuario) {
+       throw new Error(`Usuario com o ID ${createDrinkDTO.usuarioId} não encontrado.`);
+      }
       const drink = this.drinkRepository.create({
         ...createDrinkDTO,
         tags,
-        ingredientes
+        ingredientes,
+        usuario
       })
       return this.drinkRepository.save(drink)
         
     }
+  }
 
 
     async  update(id:number ,updateDrinkDTO:UpdateDrinkDTO){
@@ -254,6 +267,14 @@ export class DrinksService {
     }
 
 
+   async findCreatedByUser(userid: number) {
+
+      const drink = await this.drinkRepository.find({ where: { usuario: { id: userid } } });
+      if(!drink){
+        throw new NotFoundException(`o drink com  nao existe`)
+      }
+      return drink
+    }
 
 
 

@@ -1,6 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Tag } from "./tags.entity"
 import { Ingrediente } from "./ingredientes.entity"
+import { Usuario } from "./usuario.entity"
 
 @Entity('drinks')
 export class Drink {
@@ -52,11 +53,13 @@ export class Drink {
     @Column({ nullable: true })
     medidas4: string
 
-
-
-
-
-   @Column({default: false})
+    @Column({default: false})
     salvo: boolean
+
+   @ManyToOne(() => Usuario, (usuario) => usuario.drinks)
+   usuario: Usuario;
+
+    @Column({default: true})
+    publico: boolean
 }
 

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ReactNativeUI",
-    "slug": "ReactNativeUI",
+    "name": "DrinkHub",
+    "slug": "DrinkHub",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
