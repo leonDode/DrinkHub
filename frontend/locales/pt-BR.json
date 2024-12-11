@@ -1,0 +1,52 @@
+{
+  "menu": {
+    "change_language": "Trocar idioma",
+    "mybar": "Meu bar",
+    "dark_mode": "Modo Escuro",
+    "logout": "Sair",
+    "change_unit": "Alterar Unidade"
+  },
+  "home": {
+    "search_placeholder": "Buscar uma receita",
+    "settings_title": "Configurações",
+    "mybar_only": "Apenas o que já tenho no meu bar",
+    "light_mode": "Modo Claro",
+    "dark_mode": "Modo Escuro",
+    "logout": "Sair",
+    "close": "Fechar"
+  },
+  "categories": {
+    "amargo": "Amargo",
+    "cítrico": "Cítrico",
+    "doce": "Doce",
+    "suave": "Suave",
+    "forte": "Forte",
+    "quente": "Quente"
+  },
+  "saved": {
+    "search_placeholder": "Buscar receita"
+  },
+  "rating": {
+    "title": "Avalie esta receita",
+    "comment_placeholder": "Escreva um comentário (opcional)",
+    "submit": "Enviar",
+    "success_title": "Sucesso",
+    "success_message": "Avaliação enviada com sucesso!",
+    "error_title": "Erro",
+    "error_message": "Houve um problema ao enviar a avaliação.",
+    "error_fetch_rating": "Erro ao buscar avaliação:",
+    "error_submit": "Erro ao enviar avaliação:",
+    "error_code": "Código",
+    "generic_error": "Não foi possível enviar sua avaliação."
+  },
+  "recipe_detail": {
+    "description": "Descrição",
+    "ingredients": "Ingredientes",
+    "instructions": "Instruções",
+    "amount": "Quantidade:",
+    "login_required": "Login Necessário",
+    "login_to_save_recipe": "É necessário fazer login para salvar a receita.",
+    "error_loading_data": "Erro ao carregar dados:",
+    "error_fetching_drink": "Erro ao buscar receita:"
+  }
+}

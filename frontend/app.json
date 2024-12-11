@@ -2,29 +2,49 @@
   "expo": {
     "name": "DrinkHub",
     "slug": "DrinkHub",
+    "scheme": "drinkhub",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/drinkhubName.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/drinkhubName.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#3cae6f"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dode2511.drinkhub"
     },
     "android": {
+      "package": "com.dode2511.drinkhub",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/images/drinkhubName.png",
+        "backgroundColor": "#3cae6f"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "drinkhub",
+              "host": "auth"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/images/drinkhubName.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1095812f-9464-4d59-bb42-bc7f89876549"
+      }
+    },
+    "owner": "dode1125"
   }
 }

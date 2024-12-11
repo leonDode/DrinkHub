@@ -1,6 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types'
-import { CreateDrinkDTO } from './create_drink.dto'
+import { PartialType } from '@nestjs/swagger';
+import { CreateDrinkDTO } from './create_drink.dto';
 
-export class UpdateDrinkDTO extends PartialType(CreateDrinkDTO) {
-
-}
+export class UpdateDrinkDTO extends PartialType(CreateDrinkDTO) {}

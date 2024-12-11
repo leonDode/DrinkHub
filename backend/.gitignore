@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /build
-.docker/
+
 # Logs
 logs
 *.log
@@ -27,7 +27,8 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
-
+.prettierignore
+.eslintignore
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json

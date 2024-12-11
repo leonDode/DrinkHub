@@ -1,0 +1,52 @@
+{
+  "menu": {
+    "change_language": "Change Language",
+    "mybar": "MyBar",
+    "dark_mode": "Dark Mode",
+    "logout": "Logout",
+    "change_unit": "Change Unit"
+  },
+  "home": {
+    "search_placeholder": "Search any recipe",
+    "settings_title": "Settings",
+    "mybar_only": "Only what I have in my bar",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "logout": "Logout",
+    "close": "Close"
+  },
+  "categories": {
+    "amargo": "Bitter",
+    "cítrico": "Citrus",
+    "doce": "Sweet",
+    "suave": "Smooth",
+    "forte": "Strong",
+    "quente": "Hot"
+  },
+  "saved": {
+    "search_placeholder": "Search any recipe"
+  },
+  "rating": {
+    "title": "Rate this recipe",
+    "comment_placeholder": "Write a comment (optional)",
+    "submit": "Submit",
+    "success_title": "Success",
+    "success_message": "Rating submitted successfully!",
+    "error_title": "Error",
+    "error_message": "There was an issue submitting the rating.",
+    "error_fetch_rating": "Error fetching rating:",
+    "error_submit": "Error submitting rating:",
+    "error_code": "Code",
+    "generic_error": "Could not submit your rating."
+  },
+  "recipe_detail": {
+    "description": "Description",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "amount": "Amount:",
+    "login_required": "Login Required",
+    "login_to_save_recipe": "You need to log in to save the recipe.",
+    "error_loading_data": "Error loading data:",
+    "error_fetching_drink": "Error fetching recipe:"
+  }
+}

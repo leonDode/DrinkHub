@@ -1,36 +1,50 @@
-import { View, Text, ScrollView, Image, TextInput, Modal, StyleSheet } from 'react-native';
-import React, { useEffect, useState,useContext } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { HomeIcon, HomeIconOutline, IdentificationIcon, BookmarkIcon, SparklesIcon, Cog8ToothIcon } from 'react-native-heroicons/outline';
-import { useNavigation } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
-import Categories from '../components/categories';
-import axios from 'axios';
-import Recipes from '../components/recipes';
-import { URL } from '../helpers/url';
-import CheckBox from 'react-native-check-box';
-import { AuthContext } from '../contexts/authContext';
-
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TextInput,
+  Modal,
+  StyleSheet,
+} from "react-native";
+import React, { useEffect, useState, useContext } from "react";
+import { TouchableOpacity } from "react-native";
+import {
+  Bars3Icon,
+  ArrowRightEndOnRectangleIcon,
+  SunIcon,
+  MoonIcon,
+} from "react-native-heroicons/outline";
+import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
+import Categories from "../components/categories";
+import axios from "axios";
+import Recipes from "../components/recipes";
+import { URL } from "../helpers/url";
+import CheckBox from "react-native-check-box";
+import { AuthContext } from "../contexts/authContext";
+import { ThemeContext } from "../contexts/ThemeContext"; // Importa o ThemeContext
+import { useRoute } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 export default function HomeScreen() {
+  const route = useRoute();
   const [activeCategory, setActiveCategory] = useState();
   const [categories, setCategories] = useState([]);
   const [drinks, setDrinks] = useState([]);
-  const [activeIcon, setActiveIcon] = useState('Home');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeIcon, setActiveIcon] = useState("Home");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const { userToken, login, logout, isLoading } = useContext(AuthContext);
+  const { isDarkTheme, toggleTheme } = useContext(ThemeContext); // Consome o estado do tema e a função de alternância
+  const { t } = useTranslation();
 
-
-
-
-
-
-
-
+  const isChecked = route.params?.isChecked ?? false;
 
   const navigation = useNavigation();
 
@@ -38,6 +52,15 @@ export default function HomeScreen() {
     getCategories();
     getRecipes();
   }, []);
+
+  useEffect(() => {
+    getRecipes();
+  }, [isChecked]);
+
+  const handleLogout = () => {
+    logout();
+    navigation.replace("Login");
+  };
 
   const handleChangeCategory = (category) => {
     if (category === activeCategory) {
@@ -53,57 +76,49 @@ export default function HomeScreen() {
   // listagem de categorias
   const getCategories = async () => {
     try {
-      const response = await axios.get(`${URL}/categorias`);
+      const response = await axios.get(`${URL}/drinks/pesqTag/tags`);
       if (response && response.data) {
         setCategories(response.data);
       }
     } catch (err) {
-      console.log('error: ', err.message);
+      console.log("error:aq ", err.message);
     }
   };
-
 
   // listagem de drinks
   const getRecipes = async (category) => {
     try {
       let response;
-      if(isChecked){
-
-        if(category){
-          response = await axios.get(`${URL}/mybar/${category}`)
-        }else{
-          response = await axios.get(`${URL}/mybar`)
+      if (isChecked) {
+        if (category) {
+          response = await axios.get(`${URL}/drinks/mybar/${category}`);
+        } else {
+          console.log("opa");
+          response = await axios.get(`${URL}/drinks/pesqMybar/mybar`);
         }
-      } else{
-           if (category) {
-              response = await axios.get(`${URL}/tags/${category}`);
-           } else {
-             response = await axios.get(URL);
-           }
+      } else {
+        if (category) {
+          response = await axios.get(`${URL}/drinks/pesqTag/tags/${category}`);
+        } else {
+          response = await axios.get(`${URL}/drinks`);
+        }
       }
 
       if (response && response.data) {
         setDrinks(response.data);
       }
-    
     } catch (err) {
-      console.log('error: ', err.message);
+      console.log("error: ", err.message);
     }
   };
-
-  const handleIconPress = (iconName) => {
-    setActiveIcon(iconName);
-  };
-
 
   const handleSearch = (text) => {
     setSearchQuery(text);
     filterRecipes(text);
   };
 
-// filtro da barra de pesquisa
   const filterRecipes = (text) => {
-    if (text === '') {
+    if (text === "") {
       getRecipes(activeCategory);
     } else {
       const filteredDrinks = drinks.filter((drink) =>
@@ -112,83 +127,70 @@ export default function HomeScreen() {
       setDrinks(filteredDrinks);
     }
   };
-// gerador de drink aleatorio
-  const handleRandomRecipe = () => {
-    if (drinks.length > 0) {
-      let randomDrink = null;
-      do {
-        randomDrink = drinks[Math.floor(Math.random() * drinks.length)];
-      } while (!randomDrink || !randomDrink.id);
-      navigation.navigate('RandomRecipe', { drink: randomDrink });
-    }
-  };
 
-  // modal de configuracoes
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
-    getRecipes()
+    getRecipes();
   };
-// check box Mybar
+
   const handleCheckBoxChange = () => {
     setIsChecked(!isChecked);
-   
   };
 
   return (
-    <View className="flex-1 bg-white">
-      <StatusBar style="dark" />
+    <View className={`flex-1 ${isDarkTheme ? "bg-black" : "bg-white"}`}>
+      <StatusBar style={isDarkTheme ? "light" : "dark"} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 50 }}
         className="space-y-6 pt-14"
+        decelerationRate={0.6}
       >
         <View className="mx-4 flex-row justify-between items-center mb-2">
-          <Image
-            source={require('../../assets/images/avatar.png')}
-            style={{ height: hp(5), width: hp(5.5) }}
-          />
-          <TouchableOpacity onPress={logout}>
-            <Cog8ToothIcon size={hp(3)} color="gray" />
-          </TouchableOpacity>
-        </View>
-
-        {/* DrinkHub */}
-        <View className="mx-4 flex-row justify-between items-center mb-2">
-          <Text style={{ fontSize: hp(3.8) }} className="font-semibold text-neutral-600">
+          <Text
+            style={{ fontSize: hp(3.8) }}
+            className={`font-semibold ${
+              isDarkTheme ? "text-white" : "text-neutral-600"
+            }`}
+          >
             <Text className="text-green-600">DrinkHub</Text>
           </Text>
-          <TouchableOpacity
-            onPress={handleRandomRecipe}
-            className="flex-row items-center space-x-2"
-            style={{
-              borderWidth: 1,
-              borderColor: 'green',
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 20,
-              backgroundColor: 'white',
-            }}
-          >
-            <Text style={{ fontSize: hp(2), color: 'green'}}>Aleatório</Text>
-            <SparklesIcon size={hp(3)} color="green" />
+
+          {/* Botão para abrir o menu de configurações */}
+          <TouchableOpacity onPress={() => navigation.navigate("Menu")}>
+            <Bars3Icon size={hp(3)} color={isDarkTheme ? "white" : "gray"} />
           </TouchableOpacity>
         </View>
 
-        {/* search bar */}
-        <View className="mx-4 flex-row items-center rounded-full bg-black/5 p-[6px]">
+        {/* Barra de busca */}
+        <View
+          className={`mx-4 flex-row items-center rounded-full p-[6px] ${
+            isDarkTheme ? "bg-gray-950" : "bg-black/5"
+          }`}
+        >
           <TextInput
-            placeholder="Search any recipe"
-            placeholderTextColor={'gray'}
+            placeholder={t("home.search_placeholder")} // Tradução da placeholder
+            placeholderTextColor={"gray"}
             style={{ fontSize: hp(1.7) }}
-            className="flex-1 text-base mb-1 pl-3 tracking-wider"
+            className={`flex-1 text-base mb-1 pl-3 tracking-wider ${
+              isDarkTheme ? "text-white" : "text-black"
+            }`}
             onChangeText={handleSearch}
           />
-          <View className="bg-white rounded-full p-3">
-            <MagnifyingGlassIcon size={hp(2.5)} strokeWidth={3} color="gray" />
+          <View
+            className={` rounded-full p-3 ${
+              isDarkTheme ? "bg-stone-800 " : "bg-white"
+            }`}
+          >
+            <MagnifyingGlassIcon
+              size={hp(2.5)}
+              strokeWidth={3}
+              color={isDarkTheme ? "rgb(168 162 158)" : "gray"}
+            />
           </View>
         </View>
 
-        {/* categorias */}
+        {/* Categorias */}
         <View>
           {categories.length > 0 && (
             <Categories
@@ -199,32 +201,13 @@ export default function HomeScreen() {
           )}
         </View>
 
+        {/* Receitas */}
         <View>
           <Recipes drinks={drinks} categories={categories} />
         </View>
       </ScrollView>
-      {/* footer menu */}
-      {/*
-      <View className="flex-row justify-around items-center p-4 bg-white border-t border-gray-200">
-        <TouchableOpacity onPress={() => handleIconPress('Home')}>
-          {activeIcon === 'Home' ? (
-            <HomeIcon size={hp(3)} color="black" />
-          ) : (
-            <HomeIconOutline size={hp(3)} color="gray" />
-          )}
-        </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('MyBar')}>
-          <IdentificationIcon size={hp(3)} color="gray" />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate('Saved')}>
-          <BookmarkIcon size={hp(3)} color="gray" />
-        </TouchableOpacity>
-      </View>
-      */}
-
-      {/* Modal */}
+      {/* Modal de configurações */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -233,20 +216,41 @@ export default function HomeScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Configurações</Text>
+            <Text style={styles.modalText}>
+              {t("home.settings_title")} {/* Título do modal */}
+            </Text>
             <View style={styles.checkBoxContainer}>
               <CheckBox
                 isChecked={isChecked}
                 onClick={handleCheckBoxChange}
                 style={styles.checkBox}
               />
-              <Text style={styles.label}>Apenas o que já tenho no meu bar</Text>
+              <Text style={styles.label}>
+                {t("home.mybar_only")} {/* Texto da opção de MyBar */}
+              </Text>
             </View>
+
+            {/* Botão para trocar o tema */}
+            <TouchableOpacity onPress={toggleTheme}>
+              {isDarkTheme ? (
+                <SunIcon size={hp(3)} color="black" />
+              ) : (
+                <MoonIcon size={hp(3)} color="gray" />
+              )}
+              <Text style={styles.label}>
+                {isDarkTheme ? t("home.light_mode") : t("home.dark_mode")}
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
-              style={styles.button}
-              onPress={toggleModal}
+              style={styles.logoutButton}
+              onPress={handleLogout}
             >
-              <Text style={styles.buttonText}>Fechar</Text>
+              <ArrowRightEndOnRectangleIcon size={hp(3)} color="red" />
+              <Text style={styles.logoutText}>{t("home.logout")}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={toggleModal}>
+              <Text style={styles.buttonText}>{t("home.close")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -254,21 +258,21 @@ export default function HomeScreen() {
     </View>
   );
 }
-// estilizacao da genela modal de configuroes
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    width: '80%',
-    backgroundColor: 'white',
+    width: "80%",
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "flex-start",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -279,13 +283,13 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: hp(2.5),
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   checkBoxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   checkBox: {
@@ -298,11 +302,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  logoutText: {
+    marginLeft: 10,
+    fontSize: hp(2),
+    color: "red",
+    fontWeight: "bold",
   },
 });

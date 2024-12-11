@@ -1,65 +1,70 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Tag } from "./tags.entity"
-import { Ingrediente } from "./ingredientes.entity"
-import { Usuario } from "./usuario.entity"
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn
+} from 'typeorm';
+import { Tag } from './tags.entity';
+import { Ingrediente } from './ingredientes.entity';
+import { Usuario } from './usuario.entity';
+import { Avaliacao } from './avaliacao.entity';
 
 @Entity('drinks')
 export class Drink {
+  @PrimaryGeneratedColumn()
+  id: Number;
 
-    @PrimaryGeneratedColumn()
-    id: Number
+  @Column()
+  nome: String;
 
-    @Column()
-    nome: String
+  @Column()
+  descricao: string;
 
-    @Column()
-    descricao: string
+  @Column({ nullable: true })
+  instrucoes: string;
 
-    @Column({nullable:true})
-    instrucoes: string
+  @Column({ nullable: true })
+  img: String;
 
+  @JoinTable()
+  @ManyToMany(() => Tag, (tag) => tag.drinks, {
+    cascade: true
+  })
+  tags: Tag[];
 
-    @Column()
-    img: String
+  @JoinTable()
+  @ManyToMany(() => Ingrediente, (ingrediente) => ingrediente.drinks, {
+    cascade: true
+  })
+  ingredientes: Ingrediente[];
 
+  @Column({ nullable: true })
+  medidas0?: string;
 
+  @Column({ nullable: true })
+  medidas1?: string;
 
-    @JoinTable()
-    @ManyToMany(()=> Tag,tag =>tag.drinks,{
-        cascade:true
-    })
-    tags: Tag[]
+  @Column({ nullable: true })
+  medidas2?: string;
 
+  @Column({ nullable: true })
+  medidas3?: string;
 
-    @JoinTable()
-    @ManyToMany(()=> Ingrediente,ingrediente =>ingrediente.drinks,{
-        cascade: true
-    })
-    ingredientes: Ingrediente[]
+  @Column({ nullable: true })
+  medidas4?: string;
 
+  @Column({ default: false })
+  salvo: boolean;
 
-    @Column({ nullable: true })
-    medidas0: string
+  @ManyToOne(() => Usuario, (usuario) => usuario.drinks)
+  usuario: Usuario;
 
-    @Column({ nullable: true })
-    medidas1: string
+  @Column({ default: true })
+  publico: boolean;
 
-    @Column({ nullable: true })
-    medidas2: string
-
-    @Column({ nullable: true })
-    medidas3: string
-
-    @Column({ nullable: true })
-    medidas4: string
-
-    @Column({default: false})
-    salvo: boolean
-
-   @ManyToOne(() => Usuario, (usuario) => usuario.drinks)
-   usuario: Usuario;
-
-    @Column({default: true})
-    publico: boolean
+  @OneToMany(() => Avaliacao, (avaliacao) => avaliacao.drink)
+  avaliacoes: Avaliacao[];
 }
-
